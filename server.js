@@ -26,30 +26,30 @@ mongoose.connect("mongodb://localhost/mongo-scraper");
 // Routes
 
 //GET requests to render Handlebars pages
-app.get("/", function(req, res) {
-  Article.find({"saved": false}, function(error, data) {
-    var hbsObject = {
-      article: data
-    };
-    console.log(hbsObject);
-    res.render("home", hbsObject);
-  });
-});
+// app.get("/", function(req, res) {
+//   Article.find({"saved": false}, function(error, data) {
+//     var hbsObject = {
+//       article: data
+//     };
+//     console.log(hbsObject);
+//     res.render("home", hbsObject);
+//   });
+// });
 
-app.get("/saved", function(req, res) {
-  Article.find({"saved": true}).populate("notes").exec(function(error, articles) {
-    var hbsObject = {
-      article: articles
-    };
-    res.render("saved", hbsObject);
-  });
-});
+// app.get("/saved", function(req, res) {
+//   Article.find({"saved": true}).populate("notes").exec(function(error, articles) {
+//     var hbsObject = {
+//       article: articles
+//     };
+//     res.render("saved", hbsObject);
+//   });
+// });
 // A GET request to scrape the wjs website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with request
-  request("https://www.wsj.com/", function(error, response, html) {
+  axios.get("https://www.wsj.com/").then( function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
-    var $ = cheerio.load(html);
+    var $ = cheerio.load(response.data);
     // Now, we grab every h2 within an article tag, and do the following:
     $("article").each(function(i, element) {
 
@@ -60,7 +60,7 @@ app.get("/scrape", function(req, res) {
       result.title = $(this).children("h2").text();
       result.summary = $(this).children(".summary").text();
       result.link = $(this).children("h2").children("a").attr("href");
-
+console.log(result);
       // Using our Article model, create a new entry
       // This effectively passes the result object to the entry (and the title and link)
       var entry = new Article(result);
