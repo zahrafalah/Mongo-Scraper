@@ -26,24 +26,24 @@ mongoose.connect("mongodb://localhost/mongo-scraper");
 // Routes
 
 //GET requests to render Handlebars pages
-// app.get("/", function(req, res) {
-//   Article.find({"saved": false}, function(error, data) {
-//     var hbsObject = {
-//       article: data
-//     };
-//     console.log(hbsObject);
-//     res.render("home", hbsObject);
-//   });
-// });
+app.get("/", function(req, res) {
+  Article.find({"saved": false}, function(error, data) {
+    var hbsObject = {
+      article: data
+    };
+    console.log(hbsObject);
+    res.render("home", hbsObject);
+  });
+});
 
-// app.get("/saved", function(req, res) {
-//   Article.find({"saved": true}).populate("notes").exec(function(error, articles) {
-//     var hbsObject = {
-//       article: articles
-//     };
-//     res.render("saved", hbsObject);
-//   });
-// });
+app.get("/saved", function(req, res) {
+  Article.find({"saved": true}).populate("notes").exec(function(error, articles) {
+    var hbsObject = {
+      article: articles
+    };
+    res.render("saved", hbsObject);
+  });
+});
 // A GET request to scrape the wjs website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with request
@@ -51,32 +51,27 @@ app.get("/scrape", function(req, res) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
     // Now, we grab every h2 within an article tag, and do the following:
-    $("article").each(function(i, element) {
-
+    $(".wsj-card").each(function(i, element) {
+      // console.log("working!");
       // Save an empty result object
       var result = {};
 
       // Add the title and summary of every link, and save them as properties of the result object
-      result.title = $(this).children("h2").text();
-      result.summary = $(this).children(".summary").text();
-      result.link = $(this).children("h2").children("a").attr("href");
-console.log(result);
-      // Using our Article model, create a new entry
-      // This effectively passes the result object to the entry (and the title and link)
-      var entry = new Article(result);
+      result.title = $(this).children(".wsj-headline").text();
+      result.summary = $(this).children(".wsj-card-body").children(".wsj-summary").children("span").text();
+      result.link = $(this).children("h3").children("a").attr("href");
+      // console.log(result);
 
-      // Now, save that entry to the db
-      entry.save(function(err, doc) {
-        // Log any errors
-        if (err) {
-          console.log(err);
-        }
-        // Or log the doc
-        else {
-          console.log(doc);
-        }
-      });
-
+      Article.create(result)
+        .then(function(dbArticle) {
+          // View the added result in the console
+          console.log(dbArticle);
+        })
+        .catch(function(err) {
+          // If an error occurred, send it to the client
+          return res.json(err);
+        });
+     
     });
         res.send("Scrape Complete");
 
@@ -86,5 +81,5 @@ console.log(result);
 
 // Start the server
 app.listen(PORT, function() {
-  console.log("App running on port " + PORT + "!");
+  console.log("App running on port" + PORT + "!");
 });
