@@ -1,0 +1,19 @@
+body {
+    background-image: url("../images/wsj.jpg");
+    background-repeat: no-repeat;
+    background-size:cover;
+    padding-top: 70px;
+}
+
+.deleteNote {
+	display: inline-block;
+}
+
+.previousNotes {
+    display: inline-block;
+    width: 90%
+}
+
+/* #scrape {
+    margin: 8px 0px;
+} */
