@@ -47,6 +47,7 @@ mongoose.connect("mongodb://localhost/mongo-scraper");
 
 ///GET requests to render Handlebars pages
 app.get("/", function(req, res) {
+  console.log("hit it!");
   Article.find({"saved": false}, function(error, data) {
     var hbsObject = {
       article: data
@@ -104,6 +105,7 @@ app.get("/scrape", function(req, res) {
 
 // Route for getting all Articles from the db
 app.get("/articles", function(req, res) {
+  console.log("hit /articles!");
   // Grab every document in the Articles collection
   Article.find({})
     .then(function(dbArticle) {
