@@ -73,10 +73,12 @@ app.get("/saved", function(req, res) {
 
 // A GET request to scrape the wjs website
 app.get("/scrape", function(req, res) {
+  console.log("Hit the SCRAPE!");
   // First, we grab the body of the html with request
   axios.get("https://www.wsj.com/").then( function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
+    
     // Now, we grab every h2 within an article tag, and do the following:
     $(".wsj-card").each(function(i, element) {
       // console.log("working!");
