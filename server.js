@@ -15,7 +15,7 @@ var Article = require("./models/Article.js");
 mongoose.Promise = Promise;
 
 
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 var app = express();
 
 var exphbs = require("express-handlebars");
