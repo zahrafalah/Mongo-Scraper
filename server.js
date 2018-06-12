@@ -52,7 +52,7 @@ app.get("/", function(req, res) {
       article: data
     };
     console.log(hbsObject);
-    res.render("home", hbsObject);
+    res.render("index", hbsObject);
   });
 });
 
@@ -112,7 +112,7 @@ app.get("/articles", function(req, res) {
         article: dbArticle
       }
       // console.log(JSON.stringify(hbsObject));
-      res.render("home", hbsObject);
+      res.render("index", hbsObject);
     })
   
     .catch(function(err) {
@@ -143,6 +143,7 @@ app.post("/articles/save/:id", function(req, res) {
   Article.findOneAndUpdate({ "_id": req.params.id }, { "saved": true})
   // Execute the above query
   .exec(function(err, dbArticle) {
+    console.log("we made it");
     // Log any errors
     if (err) {
       console.log(err);
