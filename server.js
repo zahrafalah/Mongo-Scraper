@@ -14,13 +14,14 @@ var Article = require("./models/Article.js");
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
 
-//setting up Morgan middleware
-// app.use(logger('dev'));
 
 var PORT = 3000;
 var app = express();
 
 var exphbs = require("express-handlebars");
+
+//setting up Morgan middleware
+// app.use(logger('dev'));
 
 app.engine("handlebars", exphbs({
   defaultLayout: "main",
@@ -41,7 +42,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/mongo-scraper");
+
+// mongoose.connect("mongodb://localhost/mongo-scraper");
+mongoose.connect(process.env.MONGODB_URI);
+
+
 
 // Routes
 
