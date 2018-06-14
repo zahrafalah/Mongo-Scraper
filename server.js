@@ -43,16 +43,16 @@ app.use(express.static("public"));
 
 // Connect to the Mongo DB
 
-mongoose.connect("mongodb://localhost/mongo-scraper");
-// mongoose.connect(process.env.MONGODB_URI);
+// mongoose.connect("mongodb://localhost/mongo-scraper");
+mongoose.connect(process.env.MONGODB_URI);
 
 // console.log("Successful Connection to Mongoose.");
-// app.on("error", function(error) {
+// app.db.on("error", function(error) {
 //   console.log("Mongoose Error: ", error);
 // });
 
 // Once logged in to the db through mongoose, log a success message
-// app.once("open", function() {
+// app.db.once("open", function() {
 //   console.log("Mongoose connection successful.");
 // });
 
